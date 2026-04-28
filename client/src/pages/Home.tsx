@@ -8,7 +8,7 @@ import {
   Mic, Trash2, Check, SkipForward, Users, Star,
   Share2, CloudUpload, Undo2, Redo2, Printer, Bold, Italic,
   Strikethrough, AlignLeft, Type, Paintbrush, Table2, ChevronDown,
-  Filter, Grid3X3, BarChart3, Info, ExternalLink, Play,
+  Filter, Grid3X3, BarChart3, Info, ExternalLink,
 } from 'lucide-react';
 import RecordingModal from '@/components/RecordingModal';
 import { toast } from 'sonner';
@@ -266,7 +266,7 @@ export default function Home() {
               <div className="w-[110px] flex-shrink-0 px-3 py-2.5 border-r border-gray-100 text-xs">
                 {rec?.fileKey && status !== 'Deleted' ? (
                   <a href={`/manus-storage/${rec.fileKey}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
-                    Open in Drive <ExternalLink className="w-3 h-3" />
+                    Open <ExternalLink className="w-3 h-3" />
                   </a>
                 ) : <span className="text-gray-300">–</span>}
               </div>

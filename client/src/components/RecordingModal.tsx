@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Mic, Square, Play, Trash2, Save, X } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
+import { convertRecordedBlobToWav } from '@/lib/audio';
 import { toast } from 'sonner';
 
 interface RecordingModalProps {
@@ -146,8 +147,9 @@ export default function RecordingModal({ phonemeId, isOpen, onClose, onRecording
   const saveRecording = async () => {
     if (!audioBlob) return;
     try {
+      const wavBlob = await convertRecordedBlobToWav(audioBlob);
       const formData = new FormData();
-      formData.append('file', audioBlob, `phoneme-${phonemeId}-${Date.now()}.webm`);
+      formData.append('file', wavBlob, `phoneme-${phonemeId}-${Date.now()}.wav`);
       const uploadResponse = await fetch('/api/upload', { method: 'POST', body: formData });
       if (!uploadResponse.ok) throw new Error('Upload failed');
       const { fileKey } = await uploadResponse.json();

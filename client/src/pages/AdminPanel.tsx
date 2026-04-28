@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLocation } from 'wouter';
 import {
-  Loader2, Play, Check, SkipForward, Trash2, MessageSquare,
+  Loader2, Check, SkipForward, Trash2, MessageSquare, ExternalLink,
   ArrowLeft, Shield, BarChart3, Users, AudioWaveform, Pause,
   X, Filter, Download,
 } from 'lucide-react';
@@ -21,7 +21,6 @@ export default function AdminPanel() {
   const [selectedStatus, setSelectedStatus] = useState<'Approved' | 'Passed' | 'Deleted'>('Approved');
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
   const [filterStatus, setFilterStatus] = useState<string>('all');
-  const [isPlayingId, setIsPlayingId] = useState<number | null>(null);
 
   const { data: stats } = trpc.recording.getPendingForReview.useQuery(undefined, {
     enabled: isAuthenticated && user?.role === 'admin',
@@ -194,10 +193,16 @@ export default function AdminPanel() {
                       <td className="px-4 py-3 text-xs text-gray-500 max-w-[150px] truncate">{recording.reviewNotes || '—'}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1.5">
-                          {recording.fileKey && (
-                            <button className="p-1.5 hover:bg-blue-50 rounded-lg transition-colors" title="Play">
-                              <Play className="w-3.5 h-3.5 text-blue-600" />
-                            </button>
+                          {recording.fileKey && recording.status !== 'Deleted' && (
+                            <a
+                              href={`/manus-storage/${recording.fileKey}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 hover:bg-blue-50 rounded-lg transition-colors"
+                              title="Open audio"
+                            >
+                              <ExternalLink className="w-3.5 h-3.5 text-blue-600" />
+                            </a>
                           )}
                           <button onClick={() => quickApprove(recording.id)} className="p-1.5 hover:bg-emerald-50 rounded-lg transition-colors" title="Approve">
                             <Check className="w-3.5 h-3.5 text-emerald-600" />

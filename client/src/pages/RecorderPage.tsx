@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@/_core/hooks/useAuth';
 import { trpc } from '@/lib/trpc';
+import { convertRecordedBlobToWav } from '@/lib/audio';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocation } from 'wouter';
@@ -193,8 +194,9 @@ export default function RecorderPage() {
   const saveAndNext = async () => {
     if (!audioBlob || !currentPhoneme) return;
     try {
+      const wavBlob = await convertRecordedBlobToWav(audioBlob);
       const formData = new FormData();
-      formData.append('file', audioBlob, `${currentPhoneme.phonemeId}-${Date.now()}.webm`);
+      formData.append('file', wavBlob, `${currentPhoneme.phonemeId}-${Date.now()}.wav`);
       const uploadResponse = await fetch('/api/upload', { method: 'POST', body: formData });
       if (!uploadResponse.ok) throw new Error('Upload failed');
       const { fileKey } = await uploadResponse.json();
