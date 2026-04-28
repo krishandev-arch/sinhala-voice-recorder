@@ -217,10 +217,11 @@ export default function RecorderPage() {
   const handlePass = async () => {
     if (!currentPhoneme) return;
     try {
-      await createRecordingMutation.mutateAsync({ phonemeId: currentPhoneme.id });
       const existing = recordingMap[currentPhoneme.id];
       if (existing) {
         await updateStatusMutation.mutateAsync({ recordingId: existing.id, status: 'Passed', reviewNotes: notes || 'Skipped' });
+      } else {
+        await createRecordingMutation.mutateAsync({ phonemeId: currentPhoneme.id, status: 'Passed' });
       }
       toast.success('Phoneme skipped');
       goNext();
@@ -232,7 +233,7 @@ export default function RecorderPage() {
     try {
       const existing = recordingMap[currentPhoneme.id];
       if (existing) {
-        await updateStatusMutation.mutateAsync({ recordingId: existing.id, status: 'Deleted' });
+        await updateStatusMutation.mutateAsync({ recordingId: existing.id, status: 'Deleted', clearFileKey: true });
       }
       toast.success('Recording deleted');
       goNext();

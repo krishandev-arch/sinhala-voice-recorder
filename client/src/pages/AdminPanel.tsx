@@ -59,6 +59,7 @@ export default function AdminPanel() {
       recordingId: selectedRecordingId,
       status: selectedStatus,
       reviewNotes: reviewNotes || undefined,
+      clearFileKey: selectedStatus === 'Deleted',
     });
   };
 
@@ -67,7 +68,7 @@ export default function AdminPanel() {
   };
 
   const quickReject = async (id: number) => {
-    await updateStatusMutation.mutateAsync({ recordingId: id, status: 'Deleted' });
+    await updateStatusMutation.mutateAsync({ recordingId: id, status: 'Deleted', clearFileKey: true });
   };
 
   if (!isAuthenticated || user?.role !== 'admin') {

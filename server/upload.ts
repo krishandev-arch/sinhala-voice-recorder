@@ -25,9 +25,9 @@ router.post('/upload', upload.single('file'), async (req: Request, res: Response
     const fileKey = `recordings/${timestamp}-${filename}`;
 
     // Upload to S3
-    const { url } = await storagePut(fileKey, file.buffer, file.mimetype);
+    const { key, url } = await storagePut(fileKey, file.buffer, file.mimetype);
 
-    res.json({ fileKey, url });
+    res.json({ fileKey: key, url });
   } catch (error) {
     console.error('Upload error:', error);
     res.status(500).json({ error: 'Upload failed' });

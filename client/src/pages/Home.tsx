@@ -57,7 +57,7 @@ export default function Home() {
       if (existing) {
         await updateStatusMutation.mutateAsync({ recordingId: existing.id, status: 'Passed', reviewNotes: 'Skipped' });
       } else {
-        await createRecordingMutation.mutateAsync({ phonemeId });
+        await createRecordingMutation.mutateAsync({ phonemeId, status: 'Passed' });
       }
       toast.success('Phoneme skipped');
     } catch { toast.error('Failed to skip'); }
@@ -67,7 +67,7 @@ export default function Home() {
     try {
       const existing = recordingMap[phonemeId];
       if (existing) {
-        await updateStatusMutation.mutateAsync({ recordingId: existing.id, status: 'Deleted' });
+        await updateStatusMutation.mutateAsync({ recordingId: existing.id, status: 'Deleted', clearFileKey: true });
         toast.success('Recording deleted');
       }
     } catch { toast.error('Failed to delete'); }
@@ -264,7 +264,7 @@ export default function Home() {
               </div>
               <div className="w-[90px] flex-shrink-0 px-2 py-2.5 border-r border-gray-100 flex items-center">{getStatusBadge(status)}</div>
               <div className="w-[110px] flex-shrink-0 px-3 py-2.5 border-r border-gray-100 text-xs">
-                {rec?.fileKey ? (
+                {rec?.fileKey && status !== 'Deleted' ? (
                   <a href={`/manus-storage/${rec.fileKey}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
                     Open in Drive <ExternalLink className="w-3 h-3" />
                   </a>

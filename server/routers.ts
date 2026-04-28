@@ -127,13 +127,14 @@ export const appRouter = router({
           fileKey: z.string().optional(),
           duration: z.number().optional(),
           sampleRate: z.number().optional(),
+          status: z.enum(['Pending', 'Recorded', 'Approved', 'Passed', 'Deleted']).optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
         return createRecording({
           phonemeId: input.phonemeId,
           userId: ctx.user.id,
-          status: 'Recorded',
+          status: input.status ?? 'Recorded',
           fileKey: input.fileKey,
           duration: input.duration,
           sampleRate: input.sampleRate,
@@ -149,6 +150,7 @@ export const appRouter = router({
           recordingId: z.number(),
           status: z.enum(['Pending', 'Recorded', 'Approved', 'Passed', 'Deleted']),
           reviewNotes: z.string().optional(),
+          clearFileKey: z.boolean().optional(),
         })
       )
       .mutation(async ({ input, ctx }) => {
@@ -156,7 +158,8 @@ export const appRouter = router({
           input.recordingId,
           input.status,
           ctx.user.id,
-          input.reviewNotes
+          input.reviewNotes,
+          input.clearFileKey
         );
       }),
 

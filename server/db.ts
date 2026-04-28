@@ -205,7 +205,8 @@ export async function updateRecordingStatus(
   recordingId: number,
   status: string,
   reviewedBy?: number,
-  reviewNotes?: string
+  reviewNotes?: string,
+  clearFileKey?: boolean
 ) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -221,6 +222,9 @@ export async function updateRecordingStatus(
 
   if (reviewNotes !== undefined) {
     updateData.reviewNotes = reviewNotes;
+  }
+  if (clearFileKey) {
+    updateData.fileKey = null;
   }
 
   return db.update(recordings).set(updateData).where(eq(recordings.id, recordingId));
